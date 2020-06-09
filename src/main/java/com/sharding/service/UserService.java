@@ -1,11 +1,15 @@
 package com.sharding.service;
 
 import com.dangdang.ddframe.rdb.sharding.id.generator.IdGenerator;
+import com.sharding.domain.Line;
 import com.sharding.domain.User;
+import com.sharding.mapper.LineRepository;
 import com.sharding.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author zhs
@@ -21,6 +25,7 @@ public class UserService {
 
 
 
+
     @Autowired
     private IdGenerator idGenerator;
 
@@ -29,4 +34,9 @@ public class UserService {
         log.info("user id:{}", user.getId());
         return userMapper.insert(user);
     }
+
+
+
+
+
 }
