@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 /**
  * @author zhs
  * @Description
@@ -28,5 +30,18 @@ public class UserController {
         user.setName(username);
         userService.saveUser(user);
         return "success";
+    }
+
+    @ResponseBody
+    @RequestMapping("/getUser")
+    public User getUser() {
+        return userService.getUserInfo();
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/getUserList")
+    public List<User> getUserList() {
+        return userService.getUserList();
     }
 }

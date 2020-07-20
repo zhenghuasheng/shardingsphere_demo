@@ -15,10 +15,12 @@ import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +42,9 @@ public class LineService {
     private LineRepository lineRepository;
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
 
 
 
@@ -83,7 +88,7 @@ public class LineService {
 
 
 
-    @PostConstruct
+    //@PostConstruct
     public void init() {
         //queryLines(Arrays.asList(3153178L, 3150649L, 3152639L,623344L), "99");
 
@@ -98,9 +103,5 @@ public class LineService {
         vehicle.setCode("湖南省常德市");
         vehicleRepository.save(vehicle);
     }
-
-
-
-
 
 }

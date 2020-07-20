@@ -2,12 +2,14 @@ package com.sharding.domain;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author zhs
  * @Description
  * @createTime 2020/5/30 0030 下午 2:39
  */
-public class User {
+public class User implements Serializable {
 
     private Long id;
 
