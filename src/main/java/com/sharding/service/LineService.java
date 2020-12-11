@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -74,6 +76,8 @@ public class LineService {
         //将分页设置到构建中
         nativeSearchQueryBuilder.withPageable(page);
 
+        // 排序
+        nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("id").order(SortOrder.DESC));
         //生产NativeSearchQuery
         NativeSearchQuery query = nativeSearchQueryBuilder.build();
 
