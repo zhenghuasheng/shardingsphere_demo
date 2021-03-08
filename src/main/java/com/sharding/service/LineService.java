@@ -1,10 +1,13 @@
 package com.sharding.service;
 
+import com.sharding.domain.CellInfo;
 import com.sharding.domain.Line;
 import com.sharding.domain.Vehicle;
+import com.sharding.mapper.CellRepository;
 import com.sharding.mapper.LineRepository;
 import com.sharding.mapper.VehicleRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -47,6 +50,8 @@ public class LineService {
 
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
+    @Autowired
+    private CellRepository cellRepository;
 
 
 
@@ -96,16 +101,36 @@ public class LineService {
     public void init() {
         //queryLines(Arrays.asList(3153178L, 3150649L, 3152639L,623344L), "99");
 
-        Vehicle vehicle = new Vehicle();
-        vehicle.setId(1L);
-        vehicle.setLineId(1L);
-        vehicle.setCode("湖南省长沙市");
-        vehicleRepository.save(vehicle);
+//        Vehicle vehicle = new Vehicle();
+//        vehicle.setId(1L);
+//        vehicle.setLineId(1L);
+//        vehicle.setCode("湖南省长沙市");
+//        vehicleRepository.save(vehicle);
+//
+//        vehicle.setId(2L);
+//        vehicle.setLineId(1L);
+//        vehicle.setCode("湖南省常德市");
+//        vehicleRepository.save(vehicle);
 
-        vehicle.setId(2L);
-        vehicle.setLineId(1L);
-        vehicle.setCode("湖南省常德市");
-        vehicleRepository.save(vehicle);
+        CellInfo cellInfo = new CellInfo();
+        cellInfo.setCellId(10000L);
+        cellInfo.setAddress("长沙西站高铁站");
+        cellInfo.setLongitude(112.82182525579599);
+        cellInfo.setLatitude(28.2660692542112);
+
+        GeoPoint point = new GeoPoint(cellInfo.getLatitude(), cellInfo.getLongitude());
+        cellInfo.setLocation(point);
+        cellRepository.save(cellInfo);
+
+
+        CellInfo cellInfo2 = new CellInfo();
+        cellInfo2.setCellId(10001L);
+        cellInfo2.setAddress("长沙麓谷站");
+        cellInfo2.setLongitude(112.85925366711686);
+        cellInfo2.setLatitude(28.25100765328863);
+        GeoPoint point2 = new GeoPoint(cellInfo2.getLatitude(), cellInfo2.getLongitude());
+        cellInfo2.setLocation(point2);
+        cellRepository.save(cellInfo2);
     }
 
 }

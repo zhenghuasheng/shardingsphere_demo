@@ -20,7 +20,7 @@ public class ProxyTest {
         Subject sub = new SubjectImpl();
         InvocationHandler subProxy = new SubjectProxy<>(sub);
 
-        Subject proxyInstance = (Subject) Proxy.newProxyInstance(subProxy.getClass().getClassLoader(), sub.getClass().getInterfaces(),
+        Subject proxyInstance = (Subject) Proxy.newProxyInstance(Subject.class.getClassLoader(), sub.getClass().getInterfaces(),
                 subProxy);
 
         proxyInstance.say("zhs");
