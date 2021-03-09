@@ -7,10 +7,14 @@ import com.sharding.mapper.CellRepository;
 import com.sharding.mapper.LineRepository;
 import com.sharding.mapper.VehicleRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.geo.GeoPoint;
+import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +101,7 @@ public class LineService {
 
 
 
-    //@PostConstruct
+    @PostConstruct
     public void init() {
         //queryLines(Arrays.asList(3153178L, 3150649L, 3152639L,623344L), "99");
 
@@ -112,25 +116,60 @@ public class LineService {
 //        vehicle.setCode("湖南省常德市");
 //        vehicleRepository.save(vehicle);
 
-        CellInfo cellInfo = new CellInfo();
-        cellInfo.setCellId(10000L);
-        cellInfo.setAddress("长沙西站高铁站");
-        cellInfo.setLongitude(112.82182525579599);
-        cellInfo.setLatitude(28.2660692542112);
+//        CellInfo cellInfo = new CellInfo();
+//        cellInfo.setCellId(10000L);
+//        cellInfo.setAddress("长沙西站高铁站");
+//        cellInfo.setLongitude(112.82182525579599);
+//        cellInfo.setLatitude(28.2660692542112);
+//
+//        GeoPoint point = new GeoPoint(cellInfo.getLatitude(), cellInfo.getLongitude());
+//        cellInfo.setLocation(point);
+//        cellRepository.save(cellInfo);
+//
+//
+//        CellInfo cellInfo2 = new CellInfo();
+//        cellInfo2.setCellId(10001L);
+//        cellInfo2.setAddress("长沙麓谷站");
+//        cellInfo2.setLongitude(112.85925366711686);
+//        cellInfo2.setLatitude(28.25100765328863);
+//        GeoPoint point2 = new GeoPoint(cellInfo2.getLatitude(), cellInfo2.getLongitude());
+//        cellInfo2.setLocation(point2);
+//        cellRepository.save(cellInfo2);
 
-        GeoPoint point = new GeoPoint(cellInfo.getLatitude(), cellInfo.getLongitude());
-        cellInfo.setLocation(point);
-        cellRepository.save(cellInfo);
-
-
-        CellInfo cellInfo2 = new CellInfo();
-        cellInfo2.setCellId(10001L);
-        cellInfo2.setAddress("长沙麓谷站");
-        cellInfo2.setLongitude(112.85925366711686);
-        cellInfo2.setLatitude(28.25100765328863);
-        GeoPoint point2 = new GeoPoint(cellInfo2.getLatitude(), cellInfo2.getLongitude());
-        cellInfo2.setLocation(point2);
-        cellRepository.save(cellInfo2);
+        Page<CellInfo> result = getNearCellList(28.2511d, 112.8592d, 5d);
+        System.out.println(result);
+        result.forEach(cellInfo -> {
+            double distance = GeoDistance.ARC.calculate(28.2511d, 112.8592d, cellInfo.getLocation().getLat(),
+                    cellInfo.getLocation().getLon(), DistanceUnit.KILOMETERS);
+            System.out.println("; 距离我 : "+distance+"公里");
+        });
     }
 
+
+    public Page<CellInfo> getNearCellList(Double lat, Double lon, Double distance) {
+        // 实现了SearchQuery接口，用于组装QueryBuilder和SortBuilder以及Pageable等
+        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+        // 分页
+        //注意开始是从0开始，有点类似sql中的方法limit 的查询
+        PageRequest page = PageRequest.of(0, 10);
+        nativeSearchQueryBuilder.withPageable(page);
+
+        // 间接实现了QueryBuilder接口
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        // 以某点为中心，搜索指定范围
+        GeoDistanceQueryBuilder distanceQueryBuilder = new GeoDistanceQueryBuilder("location");
+        distanceQueryBuilder.point(lat, lon);
+        // 定义查询单位：公里
+        distanceQueryBuilder.distance(distance, DistanceUnit.KILOMETERS);
+        boolQueryBuilder.filter(distanceQueryBuilder);
+        nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
+
+        // 按距离升序
+        GeoDistanceSortBuilder distanceSortBuilder =
+                new GeoDistanceSortBuilder("location", lat, lon);
+        distanceSortBuilder.unit(DistanceUnit.KILOMETERS);
+        distanceSortBuilder.order(SortOrder.DESC);
+        nativeSearchQueryBuilder.withSort(distanceSortBuilder);
+        return cellRepository.search(nativeSearchQueryBuilder.build());
+    }
 }
