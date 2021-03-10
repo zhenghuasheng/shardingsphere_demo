@@ -3,9 +3,11 @@ package com.sharding.service;
 import com.sharding.domain.CellInfo;
 import com.sharding.domain.Line;
 import com.sharding.domain.Vehicle;
+import com.sharding.domain.WifiInfo;
 import com.sharding.mapper.CellRepository;
 import com.sharding.mapper.LineRepository;
 import com.sharding.mapper.VehicleRepository;
+import com.sharding.mapper.WifiRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.geo.GeoPoint;
@@ -56,6 +58,9 @@ public class LineService {
     private RedisTemplate<String,Object> redisTemplate;
     @Autowired
     private CellRepository cellRepository;
+
+    @Autowired
+    private WifiRepository wifiRepository;
 
 
 
@@ -136,15 +141,51 @@ public class LineService {
 //        cellInfo2.setLocation(point2);
 //        cellRepository.save(cellInfo2);
 
-        Page<CellInfo> result = getNearCellList(28.2511d, 112.8592d, 5d);
+//        Page<CellInfo> result = getNearCellList(28.2511d, 112.8592d, 5d);
+//        System.out.println(result);
+//        result.forEach(cellInfo -> {
+//            double distance = GeoDistance.ARC.calculate(28.2511d, 112.8592d, cellInfo.getLocation().getLat(),
+//                    cellInfo.getLocation().getLon(), DistanceUnit.KILOMETERS);
+//            System.out.println("; 距离我 : "+distance+"公里");
+//        });
+
+
+        Page<WifiInfo> result = getNearWifiList(28.206d, 113.006d, 50d);
         System.out.println(result);
         result.forEach(cellInfo -> {
-            double distance = GeoDistance.ARC.calculate(28.2511d, 112.8592d, cellInfo.getLocation().getLat(),
+            double distance = GeoDistance.ARC.calculate(28.206d, 113.006d, cellInfo.getLocation().getLat(),
                     cellInfo.getLocation().getLon(), DistanceUnit.KILOMETERS);
             System.out.println("; 距离我 : "+distance+"公里");
         });
     }
 
+
+    public Page<WifiInfo> getNearWifiList(Double lat, Double lon, Double distance) {
+        // 实现了SearchQuery接口，用于组装QueryBuilder和SortBuilder以及Pageable等
+        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+        // 分页
+        //注意开始是从0开始，有点类似sql中的方法limit 的查询
+        PageRequest page = PageRequest.of(0, 10);
+        nativeSearchQueryBuilder.withPageable(page);
+
+        // 间接实现了QueryBuilder接口
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        // 以某点为中心，搜索指定范围
+        GeoDistanceQueryBuilder distanceQueryBuilder = new GeoDistanceQueryBuilder("location");
+        distanceQueryBuilder.point(lat, lon);
+        // 定义查询单位：公里
+        distanceQueryBuilder.distance(distance, DistanceUnit.KILOMETERS);
+        boolQueryBuilder.filter(distanceQueryBuilder);
+        nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
+
+        // 按距离升序
+        GeoDistanceSortBuilder distanceSortBuilder =
+                new GeoDistanceSortBuilder("location", lat, lon);
+        distanceSortBuilder.unit(DistanceUnit.KILOMETERS);
+        distanceSortBuilder.order(SortOrder.DESC);
+        nativeSearchQueryBuilder.withSort(distanceSortBuilder);
+        return wifiRepository.search(nativeSearchQueryBuilder.build());
+    }
 
     public Page<CellInfo> getNearCellList(Double lat, Double lon, Double distance) {
         // 实现了SearchQuery接口，用于组装QueryBuilder和SortBuilder以及Pageable等
