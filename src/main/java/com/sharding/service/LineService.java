@@ -150,7 +150,7 @@ public class LineService {
 //        });
 
 
-        Page<WifiInfo> result = getNearWifiList(28.206d, 113.006d, 50d);
+        Page<WifiInfo> result = getNearWifiList(28.206d, 113.006d, 1d);
         System.out.println(result);
         result.forEach(cellInfo -> {
             double distance = GeoDistance.ARC.calculate(28.206d, 113.006d, cellInfo.getLocation().getLat(),
@@ -165,7 +165,7 @@ public class LineService {
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
         // 分页
         //注意开始是从0开始，有点类似sql中的方法limit 的查询
-        PageRequest page = PageRequest.of(0, 10);
+        PageRequest page = PageRequest.of(0, 200);
         nativeSearchQueryBuilder.withPageable(page);
 
         // 间接实现了QueryBuilder接口
@@ -182,7 +182,7 @@ public class LineService {
         GeoDistanceSortBuilder distanceSortBuilder =
                 new GeoDistanceSortBuilder("location", lat, lon);
         distanceSortBuilder.unit(DistanceUnit.KILOMETERS);
-        distanceSortBuilder.order(SortOrder.DESC);
+        distanceSortBuilder.order(SortOrder.ASC);
         nativeSearchQueryBuilder.withSort(distanceSortBuilder);
         return wifiRepository.search(nativeSearchQueryBuilder.build());
     }

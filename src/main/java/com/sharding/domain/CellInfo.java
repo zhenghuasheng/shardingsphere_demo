@@ -2,7 +2,6 @@ package com.sharding.domain;
 
 import lombok.Data;
 import org.elasticsearch.common.geo.GeoPoint;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -34,4 +33,22 @@ public class CellInfo {
 
     @GeoPointField
     private GeoPoint location;
+
+    @Field(type = FieldType.Text)
+    private String radio;
+
+    @Field(type = FieldType.Integer)
+    private Integer mcc;
+
+    @Field(type = FieldType.Integer)
+    private Integer mnc;
+
+    @Field(type = FieldType.Text)
+    private String area;
+
+    @Field(type = FieldType.Integer)
+    private Integer range;
+
+    @Field(type = FieldType.Integer)
+    private Integer samples;
 }
