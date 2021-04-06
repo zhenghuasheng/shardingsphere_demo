@@ -15,21 +15,24 @@ import org.springframework.data.elasticsearch.annotations.GeoPointField;
  */
 
 @Data
-@Document(indexName = "lbs_cell",type = "cell")
+@Document(indexName = "lbs_cell",type = "cell", shards = 6, replicas = 0, refreshInterval = "30s")
 public class CellInfo {
 
     @Id
-    private Long cellId;
+    private Long id;
+
+    @Field(type = FieldType.Long)
+    private Long ci;
 
     @Field(type = FieldType.Text)
     private String address;
 
     //经度
     @Field(type = FieldType.Double)
-    private Double longitude;
+    private Double lon;
     //纬度
     @Field(type = FieldType.Double)
-    private Double latitude;
+    private Double lat;
 
     @GeoPointField
     private GeoPoint location;
@@ -43,8 +46,8 @@ public class CellInfo {
     @Field(type = FieldType.Integer)
     private Integer mnc;
 
-    @Field(type = FieldType.Text)
-    private String area;
+    @Field(type = FieldType.Integer)
+    private Integer lac;
 
     @Field(type = FieldType.Integer)
     private Integer range;
