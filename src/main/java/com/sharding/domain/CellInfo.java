@@ -19,9 +19,6 @@ import org.springframework.data.elasticsearch.annotations.GeoPointField;
 public class CellInfo {
 
     @Id
-    private Long id;
-
-    @Field(type = FieldType.Long)
     private Long ci;
 
     @Field(type = FieldType.Text)

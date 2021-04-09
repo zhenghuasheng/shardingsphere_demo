@@ -106,20 +106,25 @@ public class LineService {
 
 
 
-    @PostConstruct
+    //@PostConstruct
     public void init() {
         //queryLines(Arrays.asList(3153178L, 3150649L, 3152639L,623344L), "99");
 
-//        Vehicle vehicle = new Vehicle();
-//        vehicle.setId(1L);
-//        vehicle.setLineId(1L);
-//        vehicle.setCode("湖南省长沙市");
-//        vehicleRepository.save(vehicle);
-//
-//        vehicle.setId(2L);
-//        vehicle.setLineId(1L);
-//        vehicle.setCode("湖南省常德市");
-//        vehicleRepository.save(vehicle);
+        Vehicle vehicle = new Vehicle();
+        vehicle.setId(1L);
+        vehicle.setLineId(1L);
+        vehicle.setCode("湖南省长沙市");
+        vehicleRepository.save(vehicle);
+
+        vehicle.setId(2L);
+        vehicle.setLineId(1L);
+        vehicle.setCode("湖南省常德市");
+        vehicleRepository.save(vehicle);
+
+        vehicle.setId(2L);
+        vehicle.setLineId(1L);
+        vehicle.setCode("湖南省常德市鼎城区");
+        vehicleRepository.save(vehicle);
 
 //        CellInfo cellInfo = new CellInfo();
 //        cellInfo.setCellId(10000L);
@@ -150,13 +155,13 @@ public class LineService {
 //        });
 
 
-        Page<WifiInfo> result = getNearWifiList(28.206d, 113.006d, 1d);
-        System.out.println(result);
-        result.forEach(cellInfo -> {
-            double distance = GeoDistance.ARC.calculate(28.206d, 113.006d, cellInfo.getLocation().getLat(),
-                    cellInfo.getLocation().getLon(), DistanceUnit.KILOMETERS);
-            System.out.println("; 距离我 : "+distance+"公里");
-        });
+//        Page<WifiInfo> result = getNearWifiList(28.206d, 113.006d, 1d);
+//        System.out.println(result);
+//        result.forEach(cellInfo -> {
+//            double distance = GeoDistance.ARC.calculate(28.206d, 113.006d, cellInfo.getLocation().getLat(),
+//                    cellInfo.getLocation().getLon(), DistanceUnit.KILOMETERS);
+//            System.out.println("; 距离我 : "+distance+"公里");
+//        });
     }
 
 
