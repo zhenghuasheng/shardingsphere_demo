@@ -106,25 +106,28 @@ public class LineService {
 
 
 
-    //@PostConstruct
+    @PostConstruct
     public void init() {
+
+        Optional<CellInfo> cell = cellRepository.findById(188079873L);
+        System.out.println(cell.get());
         //queryLines(Arrays.asList(3153178L, 3150649L, 3152639L,623344L), "99");
 
-        Vehicle vehicle = new Vehicle();
-        vehicle.setId(1L);
-        vehicle.setLineId(1L);
-        vehicle.setCode("湖南省长沙市");
-        vehicleRepository.save(vehicle);
-
-        vehicle.setId(2L);
-        vehicle.setLineId(1L);
-        vehicle.setCode("湖南省常德市");
-        vehicleRepository.save(vehicle);
-
-        vehicle.setId(2L);
-        vehicle.setLineId(1L);
-        vehicle.setCode("湖南省常德市鼎城区");
-        vehicleRepository.save(vehicle);
+//        Vehicle vehicle = new Vehicle();
+//        vehicle.setId(1L);
+//        vehicle.setLineId(1L);
+//        vehicle.setCode("湖南省长沙市");
+//        vehicleRepository.save(vehicle);
+//
+//        vehicle.setId(2L);
+//        vehicle.setLineId(1L);
+//        vehicle.setCode("湖南省常德市");
+//        vehicleRepository.save(vehicle);
+//
+//        vehicle.setId(2L);
+//        vehicle.setLineId(1L);
+//        vehicle.setCode("湖南省常德市鼎城区");
+//        vehicleRepository.save(vehicle);
 
 //        CellInfo cellInfo = new CellInfo();
 //        cellInfo.setCellId(10000L);
