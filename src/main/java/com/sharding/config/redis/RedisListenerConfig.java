@@ -17,6 +17,8 @@ public class RedisListenerConfig {
     RedisMessageListenerContainer listenerContainer(RedisConnectionFactory connectionFactory) {
         RedisMessageListenerContainer listenerContainer = new RedisMessageListenerContainer();
         listenerContainer.setConnectionFactory(connectionFactory);
+        //下面这种方式是灵活配置，针对每个库的失效key做处理
+        //container.addMessageListener(new RedisExpiredListener(), new PatternTopic("__keyevent@0__:expired"));
         return listenerContainer;
     }
 
