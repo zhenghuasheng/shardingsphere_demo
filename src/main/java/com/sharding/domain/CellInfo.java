@@ -15,10 +15,12 @@ import org.springframework.data.elasticsearch.annotations.GeoPointField;
  */
 
 @Data
-@Document(indexName = "lbs_cell",type = "cell", shards = 6, replicas = 0, refreshInterval = "30s")
+@Document(indexName = "lbs_cell",type = "cell", shards = 8, replicas = 0, refreshInterval = "30s")
 public class CellInfo {
-
     @Id
+    private Long id;
+
+    @Field(type = FieldType.Integer)
     private Long ci;
 
     @Field(type = FieldType.Text)

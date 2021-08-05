@@ -106,11 +106,13 @@ public class LineService {
 
 
 
-    @PostConstruct
+
+
     public void init() {
 
-        Optional<CellInfo> cell = cellRepository.findById(188079873L);
-        System.out.println(cell.get());
+//        Optional<CellInfo> cell = cellRepository.findById(100L);
+//        System.out.println(cell.get());
+
         //queryLines(Arrays.asList(3153178L, 3150649L, 3152639L,623344L), "99");
 
 //        Vehicle vehicle = new Vehicle();
@@ -149,7 +151,7 @@ public class LineService {
 //        cellInfo2.setLocation(point2);
 //        cellRepository.save(cellInfo2);
 
-//        Page<CellInfo> result = getNearCellList(28.2511d, 112.8592d, 5d);
+//        Page<CellInfo> result = getNearCellList(25.134658813477d, 99.167d, 5d);
 //        System.out.println(result);
 //        result.forEach(cellInfo -> {
 //            double distance = GeoDistance.ARC.calculate(28.2511d, 112.8592d, cellInfo.getLocation().getLat(),

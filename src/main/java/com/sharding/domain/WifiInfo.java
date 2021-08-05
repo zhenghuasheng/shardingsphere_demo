@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import java.io.Serializable;
 
 @Data
-@Document(indexName = "lbs_wifi",type = "wifi",refreshInterval = "30s" ,shards = 8, replicas = 0)
+@Document(indexName = "lbs_wifi",type = "wifi",refreshInterval = "30s" ,shards = 9, replicas = 0)
 public class WifiInfo implements Serializable {
 
     @Id
